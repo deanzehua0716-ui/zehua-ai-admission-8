@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI智能选校评估 - 定制您的留学方案</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        form {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(231, 76, 60, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result-container {
+            padding: 30px;
+            border-top: 1px solid #e1e8ed;
+            display: none;
+        }
+
+        .result-container h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .report-content {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            margin-bottom: 20px;
+            white-space: pre-line;
+            line-height: 1.6;
+        }
+
+        .success-note {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #c3e6cb;
+            text-align: center;
+        }
+
+        footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 0.9em;
+            border-top: 1px solid #e1e8ed;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            header {
+                padding: 30px 20px;
+            }
+            
+            header h1 {
+                font-size: 1.8em;
+            }
+            
+            form {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI智能选校评估</h1>
+            <p>填写信息，60秒获取您的专属留学方案</p>
+        </header>
+
+        <form id="assessmentForm">
+            <div class="form-group">
+                <label for="name">您的姓名 *</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="contact">联系方式 *</label>
+                <input type="text" id="contact" name="contact" placeholder="电话或微信" required>
+            </div>
+
+            <div class="form-group">
+                <label for="gpa">平均成绩/GPA *</label>
+                <input type="text" id="gpa" name="gpa" placeholder="例如: 3.5/4.0 或 88/100" required>
+            </div>
+
+            <div class="form-group">
+                <label for="country">目标留学国家 *</label>
+                <select id="country" name="country" required>
+                    <option value="">请选择</option>
+                    <option value="美国">美国</option>
+                    <option value="英国">英国</option>
+                    <option value="加拿大">加拿大</option>
+                    <option value="澳大利亚">澳大利亚</option>
+                    <option value="新加坡">新加坡</option>
+                    <option value="香港">香港</option>
+                    <option value="其他">其他</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="major">感兴趣的专业 *</label>
+                <input type="text" id="major" name="major" placeholder="例如: 计算机科学、金融、心理学" required>
+            </div>
+
+            <button type="button" id="submitBtn" class="submit-btn">
+                <span>获取我的AI选校报告</span>
+                <div class="loading-spinner" style="display: none;"></div>
+            </button>
+        </form>
+
+        <div id="result" class="result-container">
+            <h3>您的AI选校分析报告</h3>
+            <div id="reportContent" class="report-content"></div>
+            <p class="success-note">✓ 我们的资深顾问已收到您的评估请求，将在24小时内与您联系，提供免费深度解读。</p>
+        </div>
+
+        <footer>
+            <p>© 2024 专业留学咨询 · 已成功帮助数百名学生实现留学梦想</p>
+        </footer>
+    </div>
+
+    <script>
+        // 配置 - 新的Google Apps Script URL
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxeuOs8Txqa3Uh4AvAPJl7SY3GuPT-xAEJSLkXrN8ooB6whmAFVI0BT5yKbrUkobSvD/exec';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('页面加载完成！');
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const resultDiv = document.getElementById('result');
+            const reportContent = document.getElementById('reportContent');
+            
+            if (!submitBtn) {
+                console.error('错误：找不到提交按钮');
+                return;
+            }
+            
+            submitBtn.addEventListener('click', async function() {
+                console.log('按钮被点击了！');
+                
+                const btnText = submitBtn.querySelector('span');
+                const spinner = submitBtn.querySelector('.loading-spinner');
+                
+                // 显示加载状态
+                btnText.textContent = 'AI正在生成您的专属报告...';
+                spinner.style.display = 'block';
+                submitBtn.disabled = true;
+                
+                try {
+                    // 收集表单数据
+                    const formData = {
+                        name: document.getElementById('name').value.trim(),
+                        contact: document.getElementById('contact').value.trim(),
+                        gpa: document.getElementById('gpa').value.trim(),
+                        country: document.getElementById('country').value,
+                        major: document.getElementById('major').value.trim()
+                    };
+                    
+                    console.log('提交的数据:', formData);
+                    
+                    // 验证必填字段
+                    if (!formData.name || !formData.contact || !formData.gpa || !formData.country || !formData.major) {
+                        throw new Error('请填写所有必填字段！');
+                    }
+                    
+                    // 发送数据到Google Apps Script
+                    console.log('发送请求到:', SCRIPT_URL);
+                    
+                    const response = await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData)
+                    });
+                    
+                    console.log('收到响应:', response.status);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP错误! 状态: ${response.status}`);
+                    }
+                    
+                    const result = await response.json();
+                    console.log('响应数据:', result);
+                    
+                    if (result.status === 'success') {
+                        // 显示AI报告
+                        reportContent.textContent = result.aiReport;
+                        resultDiv.style.display = 'block';
+                        
+                        // 滚动到结果区域
+                        setTimeout(() => {
+                            resultDiv.scrollIntoView({ 
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }, 100);
+                        
+                        console.log('成功显示报告！');
+                    } else {
+                        throw new Error(result.message || '服务器错误');
+                    }
+                    
+                } catch (error) {
+                    console.error('错误:', error);
+                    
+                    if (error.message.includes('Failed to fetch')) {
+                        alert('网络连接失败，请检查：\n1. 网络连接\n2. Google Apps Script部署设置\n3. 尝试刷新页面重试');
+                    } else {
+                        alert('提交失败: ' + error.message);
+                    }
+                } finally {
+                    // 恢复按钮状态
+                    btnText.textContent = '获取我的AI选校报告';
+                    spinner.style.display = 'none';
+                    submitBtn.disabled = false;
+                }
+            });
+            
+            console.log('事件监听器已设置');
+        });
+    </script>
+</body>
+</html>
